@@ -6,10 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product List</title>
   <style>
-    body {
+  
+
+
+
+
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      margin: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    /* body {
       font-family: Arial, sans-serif;
       margin: 20px;
-    }
+    } */
 
     .search-container {
       display: flex;
@@ -42,24 +71,41 @@
       text-align: center;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    tr:hover {
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
       background-color: #f5f5f5;
+      flex-direction: column;
+    }
+
+    .search-container {
+      background-color: #fff;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      width: 80%;
+      margin: auto;
+    }
+
+    .left-container, .right-container {
+      flex: 1;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .left-container {
+      background-color: #e0e0e0;
+    }
+
+    .right-container {
+      background-color: #fff;
     }
   </style>
 </head>
@@ -123,46 +169,60 @@
     <input type="text" class="search-input" id="searchInput" placeholder="Search...">
     <button class="search-button" onclick="search()">Search</button>
   </div>
+  <div class="container">
+   
+    <div class="left-container">
+      <!-- Content for the left container -->
+   
+      <h4>Recent Movie Recommendations</h4>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Primary Product Id</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Availability</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+         
+        </tbody>
+      </table>
+    </div>
+
+    <div class="right-container">
+      <!-- Content for the right container -->
+      <h4>Similar Movie Recommendations</h4>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Primary Product Id</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Availability</th>
+          </tr>
+        </thead>
+        <tbody id="tblSmiliarItem">
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
   <div class="search-container">
-    <h4>Recent Movie Recommendations</h4>
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Primary Product Id</th>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Category</th>
-        <th>Availability</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-     
-    </tbody>
-  </table>
+    
     </div>
   
   
   <div class="similarItem-container">
-    <h4>Similar Movie Recommendations</h4>
-    <table border="1">
-      <thead>
-        <tr>
-          <th>Primary Product Id</th>
-          <th>Title</th>
-          <th>Type</th>
-          <th>Category</th>
-          <th>Availability</th>
-        </tr>
-      </thead>
-      <tbody id="tblSmiliarItem">
-        
-      </tbody>
-    </table>
+    
   
   </div>
   <script>
    
   </script>
+  
 </body>
 </html>
 

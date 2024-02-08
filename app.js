@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 5000;
-var axios = require("axios")
+var axios = require("axios");
 var headers = {
   accept: "text/plain",
 };
@@ -21,9 +21,13 @@ const data = [
   { id: 3, name: "Item 3", price: 30 },
 ];
 
+// // Serve the HTML file
+// app.get("/", (req, res) => {
+//   res.render("grid", { data });
+// });
 // Serve the HTML file
 app.get("/", (req, res) => {
-  res.render("grid", { data });
+  res.sendFile(__dirname + "/register.html");
 });
 
 // Serve the registration form
@@ -34,42 +38,39 @@ app.get("/register", (req, res) => {
 // Handle form submissions
 app.post("/register", (req, res) => {
   const { username, password } = req.body;
-
   // Store user data in the in-memory database
   users.push({ username, password });
-  res.send("Registration successful!");
+  res.render("grid", { data });
 });
 
 // Route to handle search logic
-app.get("/RecientlyViewRecommendations", async(req, res) => {
- 
-  // Using fetchDataFromApi function and handling the Axios response
-  const response = await RecientlyViewRecommendations();
-
-  // Capture the data from the response into a variable
-  const data = response.data;
-  console.log("search--" + data[0].primaryProductId);
-  res.json({ results: data });
- // 
-
+app.get("/RecientlyViewRecommendations", async (req, res) => {
+  try {
+    const response = await RecientlyViewRecommendations();
+    // Capture the data from the response into a variable
+    const data = response.data;
+    console.log("search--" + data[0].primaryProductId);
+    res.json({ results: data });
+  } catch (error) {
+    console.error("An error occurred:", error.message);
+  }
 });
 
 // Route to handle search logic
-app.get("/SimilarItems/:productId", async(req, res) => {
-  const productId = req.params.productId.toLowerCase();
-  // Using fetchDataFromApi function and handling the Axios response
-  const response = await GetSimmilarItems(productId);
-
-  // Capture the data from the response into a variable
-  const data = response.data;
-  console.log("SimilarItems--" + data[0].primaryProductId);
-  res.json({ results: data });
- // 
-
+app.get("/SimilarItems/:productId", async (req, res) => {
+  try {
+    const productId = req.params.productId.toLowerCase();
+    const response = await GetSimmilarItems(productId);
+    const data = response.data;
+    console.log("SimilarItems--" + data[0].primaryProductId);
+    res.json({ results: data });
+  } catch (error) {
+    console.error("An error occurred:", error.message);
+  }
 });
 
 async function GetSimmilarItems(productId) {
-  var data='';
+  var data = "";
   return await axios.get(
     "http://localhost:35867/Movie/SimilarItemRecommendations",
     {
@@ -82,13 +83,10 @@ async function GetSimmilarItems(productId) {
       },
     }
   );
-  
- 
-  
 }
 
 async function RecientlyViewRecommendations() {
-  var data='';
+  var data = "";
   return await axios.get(
     "http://localhost:35867/Movie/RecientlyViewRecommendations",
     {
@@ -101,9 +99,6 @@ async function RecientlyViewRecommendations() {
       },
     }
   );
-  
- 
-  
 }
 
 // Start the server
