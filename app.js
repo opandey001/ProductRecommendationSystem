@@ -1,37 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+require('dotenv').config();
 const app = express();
-const port = 5000;
 var axios = require("axios");
-var headers = {
-  accept: "text/plain",
-};
-
-// Use body-parser middleware to parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-// Your data (this could come from a database)
-
-// In-memory database for simplicity (use a real database in production)
-const users = [];
-
-const data = [
-  { id: 1, name: "Item 1", price: 10 },
-  { id: 2, name: "Item 2", price: 20 },
-  { id: 3, name: "Item 3", price: 30 },
-];
-
-// // Serve the HTML file
-// app.get("/", (req, res) => {
-//   res.render("grid", { data });
-// });
+var users = [];
 // Serve the HTML file
 app.get("/", (req, res) => {
+  users = [];
   res.sendFile(__dirname + "/register.html");
 });
 
 // Serve the registration form
 app.get("/register", (req, res) => {
+  users = [];
   res.sendFile(__dirname + "/register.html");
 });
 
@@ -40,19 +23,20 @@ app.post("/register", (req, res) => {
   const { username, password } = req.body;
   // Store user data in the in-memory database
   users.push({ username, password });
-  res.render("grid", { data });
+  res.render("grid");
 });
 
 // Route to handle search logic
 app.get("/RecientlyViewRecommendations", async (req, res) => {
   try {
-    const response = await RecientlyViewRecommendations();
+    console.log("users list" + users[0].username);
+    let userId =
+      users.length > 0 ? users[0].username : process.env.DEFAULT_PRODUCT_ID;
+    const response = await RecientlyViewRecommendations(userId);
     // Capture the data from the response into a variable
     const data = response.data;
 
-res.json({ results: data });
-
-   
+    res.json({ results: data });
   } catch (error) {
     console.error("An error occurred:", error.message);
   }
@@ -61,8 +45,10 @@ res.json({ results: data });
 // Route to handle search logic
 app.get("/SimilarItems/:productId", async (req, res) => {
   try {
+    let userId =
+      users.length > 0 ? users[0].username : process.env.DEFAULT_PRODUCT_ID;
     const productId = req.params.productId.toLowerCase();
-    const response = await GetSimmilarItems(productId);
+    const response = await GetSimmilarItems(productId, userId);
     const data = response.data;
     console.log("SimilarItems--" + data[0].primaryProductId);
     res.json({ results: data });
@@ -71,39 +57,33 @@ app.get("/SimilarItems/:productId", async (req, res) => {
   }
 });
 
-async function GetSimmilarItems(productId) {
+async function GetSimmilarItems(productId, userId) {
   var data = "";
-  return await axios.get(
-    "http://localhost:35867/Movie/SimilarItemRecommendations",
-    {
-      params: {
-        userId: "1001",
-        productId: productId,
-      },
-      headers: {
-        accept: "text/plain",
-      },
-    }
-  );
+  return await axios.get(process.env.SIMILAR_API_URL, {
+    params: {
+      userId: userId,
+      productId: productId,
+    },
+    headers: {
+      accept: "text/plain",
+    },
+  });
 }
 
-async function RecientlyViewRecommendations() {
+async function RecientlyViewRecommendations(userId) {
   var data = "";
-  return await axios.get(
-    "http://localhost:35867/Movie/RecientlyViewRecommendations",
-    {
-      params: {
-        userId: "1001",
-        pageSize: "40",
-      },
-      headers: {
-        accept: "text/plain",
-      },
-    }
-  );
+  return await axios.get(process.env.RECENT_API_URL, {
+    params: {
+      userId: userId,
+      pageSize: "10",
+    },
+    headers: {
+      accept: "text/plain",
+    },
+  });
 }
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(5000, () => {
+  console.log(`Server is running on http://localhost:${5000}`);
 });
