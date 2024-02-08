@@ -305,7 +305,7 @@
 <body>
   <script>
     function search() {
-      var searchProduct = document.getElementById('searchInput').value.toLowerCase();
+      //var searchProduct = document.getElementById('searchInput').value.toLowerCase();
       fetch(`/RecientlyViewRecommendations`)
         .then(response => response.json())
         .then(data => {
@@ -326,7 +326,7 @@
     row.addEventListener('click', () => {
           // Handle the click event, for example, log the clicked item's title
           console.log('Clicked item:', item.title);
-          alert(`Get Simmilar Items for the category - ${item.categories.join(', ')}- in below Grid`);
+          alert(`Get Simmilar recommendation on the basis of  - ${item.title}`);
           searchSimilarItems(item.primaryProductId);
         });
     tableBody.appendChild(row);
@@ -339,23 +339,54 @@
         .then(data => {
           // Update the UI with the search results
           console.log('resultSimilarItems'+data.results);
- const dataRes =JSON.stringify(data.results);
- const tableBody = document.getElementById('tblSmiliarItem');
-  tableBody.innerHTML = '';
-  data.results.forEach(item => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.primaryProductId}</td>
-      <td>${item.title}</td>
-      <td>${item.type}</td>
-      <td>${ item.categories.join(', ')}</td>
-      <td>${item.availability}</td>
-    `;
-   
-    tableBody.appendChild(row);
+          const dataRes =JSON.stringify(data.results);
+          const tableBody = document.getElementById('tblSmiliarItem');
+            tableBody.innerHTML = '';
+            data.results.forEach(item => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${item.primaryProductId}</td>
+                <td>${item.title}</td>
+                <td>${item.type}</td>
+                <td>${ item.categories.join(', ')}</td>
+                <td>${item.availability}</td>
+              `;
+              row.addEventListener('click', () => {
+              // Handle the click event, for example, log the clicked item's title
+              console.log('Clicked item:', item.title);
+              alert(`Get Others you may like recommendation on the basis of  - ${item.title}`);
+              otherYouMayLike(item.primaryProductId);
+        });
+              tableBody.appendChild(row);
   });
         }).catch(error => console.error('Error:', error));
     } 
+    
+    function otherYouMayLike(productId){
+      console.log("calling OtherYouMayLike " + productId)
+      fetch(`/OtherYouMayLike/${productId}`)
+        .then(response => response.json())
+        .then(data => {
+          // Update the UI with the search results
+          console.log('$$OtherYouMayLike '+data.results);
+          const dataRes =JSON.stringify(data.results);
+          const tableBody = document.getElementById('tblOtherItem');
+            tableBody.innerHTML = '';
+            data.results.forEach(item => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${item.primaryProductId}</td>
+                <td>${item.title}</td>
+                <td>${item.type}</td>
+                <td>${ item.categories.join(', ')}</td>
+                <td>${item.availability}</td>
+              `;
+              tableBody.appendChild(row);
+  });
+        }).catch(error => console.error('Error:', error));
+    }
+    search()
+
   </script>
   <main>
     <div class="header">
@@ -383,7 +414,6 @@
             </tr>
           </thead>
           <tbody id="tableBody">
-           
           </tbody>
         </table>
         </div>
@@ -406,10 +436,32 @@
             </tr>
           </thead>
           <tbody id="tblSmiliarItem">
-            
           </tbody>
         </table>
         </div>
+      </div>
+            
+     
+
+    </div>
+    <div class="right-container">
+      <!-- Content for the right container -->
+      <!-- <h4>Similar Movie Recommendations</h4> -->
+      <div class="table-users">
+        <div class="tableHeader">Other you may like Movie Recommendations</div>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Availability</th>
+          </tr>
+        </thead>
+        <tbody id="tblOtherItem">
+        </tbody>
+      </table>
       </div>
     </div>
       </div>

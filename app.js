@@ -57,6 +57,21 @@ app.get("/SimilarItems/:productId", async (req, res) => {
   }
 });
 
+app.get("/OtherYouMayLike/:productId", async (req, res) => {
+  try {
+    console.log("#### other you may like app,js " + req.params.productId.toLowerCase())
+    let userId =
+      users.length > 0 ? users[0].username : process.env.DEFAULT_PRODUCT_ID;
+    const productId = req.params.productId.toLowerCase();
+    const response = await OtherYouMayLikeRecommendations(productId, userId);
+    const data = response.data;
+    console.log("Other you may like--" + data[0].primaryProductId);
+    res.json({ results: data });
+  } catch (error) {
+    console.error("An error occurred:", error.message);
+  }
+});
+
 async function GetSimmilarItems(productId, userId) {
   var data = "";
   return await axios.get(process.env.SIMILAR_API_URL, {
@@ -83,7 +98,20 @@ async function RecientlyViewRecommendations(userId) {
   });
 }
 
+async function OtherYouMayLikeRecommendations(productId,userId) {
+  var data = "";
+  return await axios.get(process.env.OTHER_API_URL, {
+    params: {
+      userId: userId,
+      productId: productId,
+    },
+    headers: {
+      accept: "text/plain",
+    },
+  });
+}
+
 // Start the server
-app.listen(5000, () => {
-  console.log(`Server is running on http://localhost:${5000}`);
+app.listen(5010, () => {
+  console.log(`Server is running on http://localhost:${5010}`);
 });
