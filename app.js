@@ -49,8 +49,10 @@ app.get("/RecientlyViewRecommendations", async (req, res) => {
     const response = await RecientlyViewRecommendations();
     // Capture the data from the response into a variable
     const data = response.data;
-    console.log("search--" + data[0].primaryProductId);
-    res.json({ results: data });
+
+res.json({ results: data });
+
+   
   } catch (error) {
     console.error("An error occurred:", error.message);
   }
