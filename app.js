@@ -23,7 +23,7 @@ app.post("/register", (req, res) => {
   const { username, password } = req.body;
   // Store user data in the in-memory database
   users.push({ username, password });
-  res.render("grid");
+  res.render("gridAA");
 });
 
 // Route to handle search logic
@@ -52,6 +52,23 @@ app.get("/SimilarItems/:productId", async (req, res) => {
     const data = response.data;
     console.log("SimilarItems--" + data[0].primaryProductId);
     res.json({ results: data });
+  } catch (error) {
+    console.error("An error occurred:", error.message);
+  }
+});
+
+// Route to handle search logic
+app.get("/ProductRecommendation/:userId", async (req, res) => {
+  try {
+    const uID = req.params.userId;
+    console.log('ProductAARecommendation cCall');
+    const response = await ProductAARecommendation( uID);
+    const data = response.data.Result;
+    const data1 = JSON.parse(response.data.Result.UU_Recommendation);
+    const data2 = JSON.parse(response.data.Result.Sentiment_Recommendation);
+    console.log("data1--" + JSON.stringify(data1));
+    console.log("data2--" +JSON.stringify(data2));
+    res.json({ UU_Recommendation: data1 ,Sentiment_Recommendation:data2});
   } catch (error) {
     console.error("An error occurred:", error.message);
   }
@@ -110,6 +127,29 @@ async function OtherYouMayLikeRecommendations(productId,userId) {
     },
   });
 }
+async function ProductAARecommendation(uId) {
+ console.log('Cal actualapi with user id'+uId);
+  const data = {
+    userId: uId
+  };
+  
+  return await axios.post('http://35.154.25.216:8093/api/PRSA', data, {
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  });
+  // return await axios.post(process.env.RECOMMEDNATION_URL, {
+  //   params: {
+  //     userId: userId,
+      
+  //   },
+  //   headers: {
+  //     accept: "text/plain",
+  //   },
+  // });
+}
+
 
 // Start the server
 app.listen(5010, () => {

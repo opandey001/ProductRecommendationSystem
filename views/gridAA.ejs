@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product List</title>
+  <title>Product REc List</title>
  
   <style>
 
@@ -309,88 +309,47 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <script>
-    function search() {
+    function search(userId) {
+      console.log('Calling Search')
       //var searchProduct = document.getElementById('searchInput').value.toLowerCase();
-      fetch(`/RecientlyViewRecommendations`)
+      fetch(`/ProductRecommendation/${userId}`)
         .then(response => response.json())
         .then(data => {
           // Update the UI with the search results
-          console.log('result'+data.results);
+          console.log('result AA'+data.results);
  const dataRes =JSON.stringify(data.results);
  const tableBody = document.getElementById('tableBody');
   tableBody.innerHTML = '';
-  data.results.forEach(item => {
+  data.UU_Recommendation.forEach(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${item.primaryProductId}</td>
-      <td>${item.title}</td>
-      <td>${item.type}</td>
-      <td>${ item.categories.join(', ')}</td>
-      <td>${item.availability}</td>
-    `;
-    row.addEventListener('click', () => {
-          // Handle the click event, for example, log the clicked item's title
-          console.log('Clicked item:', item.title);
-          alert(`Get Simmilar recommendation on the basis of  - ${item.title}`);
-          searchSimilarItems(item.primaryProductId);
-        });
+      <td>${item.prod_name}</td>
+      <td>${item.predicted_ratings}</td>
+      <td>${item.sentiment_score}</td>
+      <td>${ item.product_ranking_score}</td>
+      
+    `;   
     tableBody.appendChild(row);
+
   });
-        }).catch(error => console.error('Error:', error));
-    } 
-    function searchSimilarItems(productId) {
-      fetch(`/SimilarItems/${productId}`)
-        .then(response => response.json())
-        .then(data => {
-          // Update the UI with the search results
-          console.log('resultSimilarItems'+data.results);
-          const dataRes =JSON.stringify(data.results);
-          const tableBody = document.getElementById('tblSmiliarItem');
-            tableBody.innerHTML = '';
-            data.results.forEach(item => {
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td>${item.primaryProductId}</td>
-                <td>${item.title}</td>
-                <td>${item.type}</td>
-                <td>${ item.categories.join(', ')}</td>
-                <td>${item.availability}</td>
-              `;
-              row.addEventListener('click', () => {
-              // Handle the click event, for example, log the clicked item's title
-              console.log('Clicked item:', item.title);
-              alert(`Get Others you may like recommendation on the basis of  - ${item.title}`);
-              otherYouMayLike(item.primaryProductId);
-        });
-              tableBody.appendChild(row);
+  const tblSentiment = document.getElementById('tblSentiment');
+  tblSentiment.innerHTML = '';
+  data.Sentiment_Recommendation.forEach(item => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.prod_name}</td>
+      <td>${item.predicted_ratings}</td>
+      <td>${item.sentiment_score}</td>
+      <td>${ item.product_ranking_score}</td>
+      
+    `;   
+    tblSentiment.appendChild(row);
+
   });
+
         }).catch(error => console.error('Error:', error));
-    } 
-    
-    function otherYouMayLike(productId){
-      console.log("calling OtherYouMayLike " + productId)
-      fetch(`/OtherYouMayLike/${productId}`)
-        .then(response => response.json())
-        .then(data => {
-          // Update the UI with the search results
-          console.log('$$OtherYouMayLike '+data.results);
-          const dataRes =JSON.stringify(data.results);
-          const tableBody = document.getElementById('tblOtherItem');
-            tableBody.innerHTML = '';
-            data.results.forEach(item => {
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td>${item.primaryProductId}</td>
-                <td>${item.title}</td>
-                <td>${item.type}</td>
-                <td>${ item.categories.join(', ')}</td>
-                <td>${item.availability}</td>
-              `;
-              tableBody.appendChild(row);
-  });
-        }).catch(error => console.error('Error:', error));
-    }
-    search()
+    }    
+    search('joshua');
 
   </script>
   <main>
@@ -399,7 +358,7 @@
     </div>
     <div class="search-container">
       <input type="text" class="search-input" id="searchInput" placeholder="Search...">
-      <button class="search-button" onclick="search()">Search</button>
+      <button class="search-button" onclick="search('joshua')">Search</button>
     </div>
     <div class="container">
      
@@ -407,15 +366,15 @@
         <!-- Content for the left container -->
      
         <div class="table-users">
-          <div class="tableHeader">Recent Movie Recommendations</div>
+          <div class="tableHeader">UU Recommendations</div>
         <table border="1">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Category</th>
-              <th>Availability</th>
+              <th>prod_name</th>
+              <th>predicted_ratings</th>
+              <th>sentiment_score</th>
+              <th>product_ranking_scoretegories</th>
+             
             </tr>
           </thead>
           <tbody id="tableBody">
@@ -429,18 +388,17 @@
         <!-- Content for the right container -->
         <!-- <h4>Similar Movie Recommendations</h4> -->
         <div class="table-users">
-          <div class="tableHeader">Similar Movie Recommendations</div>
+          <div class="tableHeader">Sentiment Recommendations</div>
         <table border="1">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Category</th>
-              <th>Availability</th>
+              <th>prod_name</th>
+              <th>predicted_ratings</th>
+              <th>sentiment_score</th>
+              <th>product_ranking_scoretegories</th>
             </tr>
           </thead>
-          <tbody id="tblSmiliarItem">
+          <tbody id="tblSentiment">
           </tbody>
         </table>
         </div>
@@ -453,20 +411,7 @@
       <!-- Content for the right container -->
       <!-- <h4>Similar Movie Recommendations</h4> -->
       <div class="table-users">
-        <div class="tableHeader">Other you may like Movie Recommendations</div>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Type</th>
-            <th>Category</th>
-            <th>Availability</th>
-          </tr>
-        </thead>
-        <tbody id="tblOtherItem">
-        </tbody>
-      </table>
+    
       </div>
     </div>
       </div>
