@@ -26,6 +26,14 @@ app.post("/register", (req, res) => {
   res.render("gridAA");
 });
 
+app.post("/RetailAI", (req, res) => {
+  res.render("grid");
+});
+
+app.post("/InbuiltRecommendation", (req, res) => {
+  res.render("gridAA");
+});
+
 // Route to handle search logic
 app.get("/RecientlyViewRecommendations", async (req, res) => {
   try {

@@ -1,10 +1,10 @@
-<!-- views/grid.ejs -->
+<!-- views/gridaa.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product REc List</title>
+  <title>Product Recommendations List</title>
  
   <style>
 
@@ -61,7 +61,7 @@
     line-height: 1.42857143;
     vertical-align: top;
     max-width: 100%;
-    background-color: #d22f12;
+    background-color: cadetblue;
     border: 1px solid transparent;
     color: #fff;
     cursor: pointer;
@@ -309,6 +309,11 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <script>
+    function googleRetailAI(){
+      fetch(`/RetailAI`,{
+        method: "POST",
+      })
+    }
     function search(userId) {
       console.log('Calling Search')
       //var searchProduct = document.getElementById('searchInput').value.toLowerCase();
@@ -357,9 +362,13 @@
       <h1>Product Recommendations System</h1>
     </div>
     <div class="search-container">
-      <input type="text" class="search-input" id="searchInput" placeholder="Search...">
-      <button class="search-button" onclick="search('joshua')">Search</button>
+      <input style="display: none;" type="text" class="search-input" id="searchInput" placeholder="Search...">
+      <button style="display: none;" class="search-button" onclick="search('joshua')">Search</button>
+      <form action="/RetailAI" method="post">
+        <button class="search-button" type="submit" style="margin-left: 620px;">Google Retail AI</button>
+        </form>
     </div>
+    
     <div class="container">
      
       <div class="left-container">
@@ -370,11 +379,10 @@
         <table border="1">
           <thead>
             <tr>
-              <th>prod_name</th>
-              <th>predicted_ratings</th>
-              <th>sentiment_score</th>
-              <th>product_ranking_scoretegories</th>
-             
+              <th>Name</th>
+              <th>Predicted Ratings</th>
+              <th>Sentiment Score</th>
+              <th>Product Ranking</th>
             </tr>
           </thead>
           <tbody id="tableBody">
@@ -392,10 +400,10 @@
         <table border="1">
           <thead>
             <tr>
-              <th>prod_name</th>
-              <th>predicted_ratings</th>
-              <th>sentiment_score</th>
-              <th>product_ranking_scoretegories</th>
+              <th>Name</th>
+              <th>Predicted Ratings</th>
+              <th>Sentiment Score</th>
+              <th>Product Ranking</th>
             </tr>
           </thead>
           <tbody id="tblSentiment">
@@ -419,8 +427,8 @@
     <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
 <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 <df-messenger
-  project-id="retailai-1434"
-  agent-id="2ba5cca3-8f84-40ed-bd89-85938fd8625c"
+project-id="retailai-intersoft"
+agent-id="55b12418-26d3-41b5-b242-476c0ad28762"
   language-code="en"
   max-query-length="-1">
   <df-messenger-chat-bubble
